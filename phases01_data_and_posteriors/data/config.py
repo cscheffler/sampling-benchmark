@@ -11,11 +11,11 @@ def path_from_unix_path(unix_path):
     return os.path.join(os.sep, *unix_path.split('/'))
 
 
-UNIX_OPENML_PATH = '/data/lisa/data/openml'
+UNIX_OPENML_PATH = '/Users/carl/work/estimating-evidence/tmp/lisa/data/openml'
 LISATMP_NUM = 3
 USERNAME = getpass.getuser()
 PROJECT_NAME = 'sampling-benchmark'
-UNIX_EXP_PATH = '/data/lisatmp{}/{}/{}'.format(LISATMP_NUM, USERNAME,
+UNIX_EXP_PATH = '/Users/carl/work/estimating-evidence/tmp/lisatmp{}/{}/{}'.format(LISATMP_NUM, USERNAME,
                                                PROJECT_NAME)
 OPENML_FOLDER = path_from_unix_path(UNIX_OPENML_PATH)
 DATASETS_FOLDER = os.path.join(OPENML_FOLDER, 'datasets')

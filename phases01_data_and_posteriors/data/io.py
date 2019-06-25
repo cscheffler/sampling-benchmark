@@ -3,6 +3,7 @@ File for the IO operations used in the data package
 """
 
 import os
+import sys
 import pickle
 import pandas as pd
 
@@ -13,6 +14,17 @@ OLD_PICKLE_EXT = '.pickle'
 CSV_EXT = '.csv'
 READING_ERRORS = EOFError
 CSV_DEFAULT = True      # only for samples
+
+
+def pickle_dump_large_object(obj, fp, **kwargs):
+    """
+    This is a defensive way to write pickle.write, allowing for very large files on all platforms
+    """
+    max_bytes = 2**31 - 1
+    bytes_out = pickle.dumps(obj, **kwargs)
+    n_bytes = sys.getsizeof(bytes_out)
+    for idx in range(0, n_bytes, max_bytes):
+        fp.write(bytes_out[idx:idx+max_bytes])
 
 
 def get_downloaded_dataset_ids(preprocess=Preprocess.RAW):
@@ -137,14 +149,14 @@ def append_sample_diagnostic(diagnostic):
     read by python2.
     """
     with open(CONFIG['diagnostics'], 'ab') as f:
-        pickle.dump(diagnostic, f, protocol=2)
+        pickle_dump_large_object(diagnostic, f, protocol=2)
 
             
 def write_file(filename, contents, overwrite=True):
     """Write file to disk if doesn't exist or overwrite is True"""
     if overwrite or not os.path.isfile(filename):
         with open(filename, 'wb') as f:
-            pickle.dump(contents, f, protocol=pickle.HIGHEST_PROTOCOL)
+            pickle_dump_large_object(contents, f, protocol=pickle.HIGHEST_PROTOCOL)
         
 
 def write_data_error(e, dataset_id, activity_type):
@@ -170,7 +182,7 @@ def write_data_error(e, dataset_id, activity_type):
             error_set = pickle.load(f)
     error_set.add(type(e))
     with open(filename, 'wb') as f:
-        pickle.dump(error_set, f)
+        pickle_dump_large_object(error_set, f)
     
     # Write error set to text file
     filename = os.path.join(CONFIG['errors_folder'],

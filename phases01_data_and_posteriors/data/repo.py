@@ -73,6 +73,8 @@ def download_dataset_and_log(dataset_id, verbose=False):
 
 def get_dataset_dict(dataset):
     """Unpack the openml dataset object into a dictionary"""
+    if dataset.default_target_attribute is None:
+        print('Warning: dataset.default_target_attribute is None for', dataset.dataset_id)
     X, y, categorical, columns = dataset.get_data(
         target=dataset.default_target_attribute,
         return_categorical_indicator=True,

@@ -30,6 +30,7 @@ def preprocess_datasets(start_i=0, overwrite=False, verbose=True):
             if verbose: print('Already preprocessed, so skipping')
             continue
         d = read_dataset_and_log(dataset_id, Preprocess.RAW)
+        if d is None: continue
         X, y, categorical = d['X'], d['y'], d['categorical']
         # convert to ndarray if not already
         X = to_ndarray(X)

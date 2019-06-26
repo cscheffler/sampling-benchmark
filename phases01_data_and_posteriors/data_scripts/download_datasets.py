@@ -2,7 +2,16 @@
 File for downloading the OpenML datasets
 """
 
+import sys
 import os
+# must be run from the project root so the data package
+# will be added to the path
+sys.path.append(os.path.abspath('.'))
+
+from data.config import CONFIG
+from data.io import write_dataset
+
+
 import pickle
 import pandas as pd
 
@@ -11,9 +20,6 @@ from openml.exceptions import OpenMLServerError, PyOpenMLError
 from requests.exceptions import ChunkedEncodingError
 from arff import BadNominalValue
 
-UNIX_OPENML_PATH = '/Users/carl/work/estimating-evidence/tmp/lisa/data/openml'
-OPENML_FOLDER = os.path.join(os.sep, *UNIX_OPENML_PATH.split('/'))
-DATASETS_FOLDER = os.path.join(OPENML_FOLDER, 'datasets', 'raw')
 CHECKPOINT_ITERS = 25
 
 
@@ -85,33 +91,7 @@ def write_download_info(info):
 
 def get_info_filename():
     """Get location of where to write the download information"""
-    return os.path.join(OPENML_FOLDER, 'info.pickle')
-
-
-def get_dataset_filename(dataset_id):
-    """Get location of where to write dataset"""
-    return os.path.join(DATASETS_FOLDER, '{}.pickle'.format(dataset_id))
-
-
-def write_dataset(dataset_id, dataset):
-    """Write the dataset to disk"""
-    filename = get_dataset_filename(dataset_id)
-    with open(filename, 'wb') as f:
-        pickle.dump(get_dataset_dict(dataset), f)
-   
-        
-def get_dataset_dict(dataset):
-    """Unpack the openml dataset object into a dictionary"""
-    X, y, categorical, columns = dataset.get_data(
-        target=dataset.default_target_attribute,
-        return_categorical_indicator=True,
-        return_attribute_names=True)
-    return {
-        'X': X,
-        'y': y,
-        'categorical': categorical,
-        'columns': columns
-    }
+    return CONFIG['datasets_info']
 
 
 if __name__ == '__main__':

@@ -43,6 +43,7 @@ CONFIG['tasks_folder'] = TASKS_FOLDER
 CONFIG['samples_folder'] = SAMPLES_FOLDER
 CONFIG['diagnostics'] = DIAGNOSTICS
 
-# Prepare directories:
-if not os.path.exists(SAMPLES_FOLDER):
-    os.makedirs(SAMPLES_FOLDER)
+# Create all directories that don't exist
+for key, value in CONFIG.items():
+    if key.endswith('_folder'):
+        os.makedirs(value, exist_ok=True)

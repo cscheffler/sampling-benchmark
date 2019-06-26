@@ -1,16 +1,5 @@
 source venv/bin/activate
 
-# PHASE 0
-
-# Create data directory structure
-cd /Users/carl/work/estimating-evidence/tmp/lisa/data/openml/datasets
-mkdir raw
-mkdir one-hot
-mkdir standardized
-mkdir robust_standardized
-mkdir whitened
-mkdir errors
-
 cd phases01_data_and_posteriors/
 
 # Download data from OpenML

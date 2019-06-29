@@ -9,8 +9,10 @@ sys.path.append(os.path.abspath('.'))
 from data.io import get_downloaded_dataset_ids, get_dataset_filename
 from data.config import Preprocess
 
-from checksum import compute_checksum
+from checksum import compute_checksum_from_dataset
 
+
+preprocess_list = [Preprocess.ONEHOT, Preprocess.STANDARDIZED, Preprocess.ROBUST, Preprocess.WHITENED]
 
 checksum_path = os.path.join(
     os.path.dirname(
@@ -22,10 +24,10 @@ checksums = {}
 dataset_ids = get_downloaded_dataset_ids()
 for dataset_id in dataset_ids:
     dataset_id = str(dataset_id)  # JSON stores integer keys as strings
-    for preprocess in [Preprocess.ONEHOT, Preprocess.STANDARDIZED, Preprocess.ROBUST, Preprocess.WHITENED]:
+    for preprocess in preprocess_list:
         try:
             with open(get_dataset_filename(dataset_id, preprocess=preprocess), 'rb') as fp:
-                checksum = compute_checksum(fp)
+                checksum = compute_checksum_from_dataset(fp)
         except FileNotFoundError as e:
             # Skip the files we don't have since we'll compute those later
             print(f'FileNotFoundError. {e.strerror}: {e.filename}')

@@ -2,7 +2,7 @@ import json
 import glob
 import os
 
-from checksum import compute_checksum
+from checksum import compute_checksum_from_file
 
 
 openml_cache_path = os.path.expanduser('~/.openml/cache/org/openml/www/datasets/')
@@ -22,7 +22,7 @@ for path in glob.iglob(os.path.join(openml_cache_path, '*/*')):
         print(f'Path {relative_path} in cache but was not expected.')
     else:
         with open(path, 'rb') as fp:
-            checksum = compute_checksum(fp)
+            checksum = compute_checksum_from_file(fp)
         if checksums[relative_path] != checksum:
             print(f'Mismatch in {relative_path}. Expected {checksums[relative_path]} but got {checksum}.')
         del checksums[relative_path]

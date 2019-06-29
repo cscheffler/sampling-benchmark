@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath('.'))
 from data.io import get_downloaded_dataset_ids, get_dataset_filename
 from data.config import Preprocess
 
-from checksum import compute_checksum
+from checksum import compute_checksum_from_dataset
 
 
 checksum_path = os.path.join(
@@ -22,12 +22,12 @@ with open(checksum_path, 'r') as fp:
 
 dataset_ids = get_downloaded_dataset_ids()
 for dataset_id in dataset_ids:
-    checksum_key = str(dataset_id)  # JSON stores integer keys as strings
+    checksum_key = f'raw/{dataset_id}'
     if checksum_key not in checksums:
         print(f'Dataset id {dataset_id} was found on disk but was not expected.')
     else:
         with open(get_dataset_filename(dataset_id, preprocess=Preprocess.RAW), 'rb') as fp:
-            checksum = compute_checksum(fp)
+            checksum = compute_checksum_from_dataset(fp)
         if checksums[checksum_key] != checksum:
             print(f'Mismatch in {dataset_id}. Expected {checksums[checksum_key]} but got {checksum}.')
         del checksums[checksum_key]

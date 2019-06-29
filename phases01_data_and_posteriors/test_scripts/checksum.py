@@ -24,7 +24,9 @@ def compute_checksum_from_dataset(fp):
     else:
         checksum.update(np.ascontiguousarray(dataset['X']))
     checksum.update(dataset['y'])
-    checksum.update(np.array(dataset['categorical']))
-    checksum.update(np.array(dataset['columns']))
+    if 'categorical' in dataset:
+        checksum.update(np.array(dataset['categorical']))
+    if 'columns' in dataset:
+        checksum.update(np.array(dataset['columns']))
     checksum = checksum.hexdigest()
     return checksum

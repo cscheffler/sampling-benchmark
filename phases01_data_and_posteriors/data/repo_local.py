@@ -26,8 +26,8 @@ def get_dataset_ids_by_task(task):
     else:
         # This is where the OpenML dependency will come in if the task ids
         # file isn't already on disk.
-        import repo
-        dataset_ids_by_task = repo.get_dataset_ids_by_task(task)
+        from .repo import get_dataset_ids_by_task as repo_get_dataset_ids_by_task
+        dataset_ids_by_task = repo_get_dataset_ids_by_task(task)
         write_task_dataset_ids(task, dataset_ids_by_task, overwrite=False)
     return dataset_ids_by_task
 

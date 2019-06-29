@@ -1,3 +1,7 @@
 openml==0.8.0
-scikit-learn>=0.19,<0.20
-pandas>=0.20,<0.21
+scikit-learn==0.19.0
+pandas==0.20.3
+joblib
+pymc3==3.1
+h5py
+theano==0.9.0

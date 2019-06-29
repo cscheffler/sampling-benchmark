@@ -98,4 +98,4 @@ if __name__ == '__main__':
     # regression_dids = get_downloaded_dataset_ids_by_task('Supervised Regression')
     # sample_and_save_posteriors(regression_dids, 'regression')
     classification_dids = get_downloaded_dataset_ids_by_task('Supervised Classification')
-    sample_and_save_posteriors(classification_dids, 'classification')
+    sample_and_save_posteriors(classification_dids, 'classification', seed=419112)

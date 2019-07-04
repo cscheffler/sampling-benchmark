@@ -18,7 +18,7 @@ CSV_DEFAULT = True      # only for samples
 
 def pickle_dump_large_object(obj, fp, **kwargs):
     """
-    This is a defensive way to write pickle.write, allowing for very large files on all platforms
+    This way of writing pickles allows for very large files on all operating systems.
     """
     max_bytes = 2**31 - 1
     bytes_out = pickle.dumps(obj, **kwargs)

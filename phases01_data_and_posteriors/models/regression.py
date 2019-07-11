@@ -4,12 +4,13 @@ regression models. The supported models are specified in the
 REGRESSION_MODEL_NAMES constant.
 """
 
+import numpy as np
 import pymc3 as pm
 import theano.tensor as tt
 from timeit import default_timer as timer
 
 from data.preprocessing.format import numpy_to_dataframe
-from .utils import format_trace, get_pairwise_formula, get_quadratic_formula, \
+from .utils import get_pairwise_formula, get_quadratic_formula, \
                    get_linear_formula, join_nonempty
 from .nn import build_shallow_nn
 from . import MAX_NUM_SAMPLES
@@ -28,7 +29,7 @@ REGRESSION_MODEL_NAMES = \
 
 def sample_regression_model(model_name, X, y, num_samples=MAX_NUM_SAMPLES,
                             step=None, num_non_categorical=None,
-                            raw_trace=False):
+                            raw_trace=False, random_seed=None):
     """
     Sample from the posteriors of any of the supported models
 
@@ -46,6 +47,8 @@ def sample_regression_model(model_name, X, y, num_samples=MAX_NUM_SAMPLES,
     Raises:
         ValueError: if the specified model name is not supported
     """
+    if random_seed is not None:
+        np.random.seed(random_seed)
     X, y = subsample(X, y, model_name)
     d = X.shape[1]
     X = reduce_data_dimension(X, model_name)
@@ -54,13 +57,14 @@ def sample_regression_model(model_name, X, y, num_samples=MAX_NUM_SAMPLES,
         num_non_categorical = reduced_d
     
     model_name = model_name.replace('-regres', '')
-    print('X shape:', X.shape)
+    print('Number of data:', X.shape[0])
+    print('Data dimension:', X.shape[1])
     
     model = build_model(model_name, X, y, num_non_categorical)
     if 'nn' in model_name:
-        return sample_model(model, step=step, advi=True, raw_trace=raw_trace)
+        return sample_model(model, step=step, advi=True, raw_trace=raw_trace, random_seed=random_seed)
     else:
-        return sample_model(model, step=step, advi=False, raw_trace=raw_trace)
+        return sample_model(model, step=step, advi=False, raw_trace=raw_trace, random_seed=random_seed)
 
 
 def build_model(model_name, X, y, num_non_categorical):

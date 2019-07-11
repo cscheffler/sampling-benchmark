@@ -16,12 +16,16 @@ from data.preprocessing.format import make_col_names
 
 # NOTE: Current converts to a DataFrame and then to a numpy array.
 # Consider doing it all in one go.
-def format_trace(trace, to_df=True):
+def format_trace(trace, variables=None, to_df=True):
     """
     Convert the trace into the necessary format. The current format is a
     numpy array.
     """
-    df = trace_to_dataframe(trace)
+    if variables is not None:
+        variable_names = [v.name for v in variables]
+    else:
+        variable_names = None
+    df = trace_to_dataframe(trace, varnames=variable_names)
     if to_df:
         return df
     else:
